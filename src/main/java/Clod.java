@@ -84,10 +84,7 @@ public class Clod {
     }
 
     public static void printStartMessage() {
-        String logo = "┏┓┓ ┏┓┳┓\n"
-                + "┃ ┃ ┃┃┃┃\n"
-                + "┗┛┗┛┗┛┻┛\n";
-        System.out.println("Welcome to\n" + logo);
+        System.out.println("Welcome to Clod");
         printUserPrefix(false);
         System.out.println("Hi, I'm Clod. Am I a helper bot? Or a... what was that word... a... thingy? I don't know.");
         System.out.println("Anyway, I'm supposed to help you with your tasks.");

@@ -1,7 +1,48 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
+Welcome to Clod
+Clod: Hi, I'm Clod. Am I a helper bot? Or a... what was that word... a... thingy? I don't know.
+Anyway, I'm supposed to help you with your tasks.
+list/todo/deadline/event/mark/unmark/bye are really all that I can handle right now.
 
+Clod: What's that? Did you say something?
+Added to list: [T][ ] read book
+
+Clod: What's that? Did you say something?
+Added to list: [E][ ] project meeting (from: Mon 2pm to: 4pm)
+
+Clod: What's that? Did you say something?
+==============================================
+Here's what you've said so far:
+1. [T][ ] read book
+2. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+==============================================
+
+Clod: What's that? Did you say something?
+Congrats for finishing this... I think?
+[T][X] read book
+
+Clod: What's that? Did you say something?
+==============================================
+Here's what you've said so far:
+1. [T][X] read book
+2. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+==============================================
+
+Clod: What's that? Did you say something?
+I guess you didn't finish this after all. Well, that's life I guess.
+[T][ ] read book
+
+Clod: What's that? Did you say something?
+==============================================
+Here's what you've said so far:
+1. [T][ ] read book
+2. [E][ ] project meeting (from: Mon 2pm to: 4pm)
+==============================================
+
+Clod: What's that? Did you say something?
+Come on, even I know that's not a valid task number.
+
+Clod: What's that? Did you say something?
+Come on, even I know that's not a valid task number.
+
+Clod: What's that? Did you say something?
+Clod: (Confused silence) Oh, was that it? ...Hmm. Bye.
