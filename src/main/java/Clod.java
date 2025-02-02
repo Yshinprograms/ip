@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Clod {
@@ -39,8 +40,11 @@ public class Clod {
         case "deadline":
             listOfUserInputs.addNewDeadlineToList(userInput);
             break;
+        case "event":
+            listOfUserInputs.addNewEventToList(userInput);
+            break;
         default:
-            System.out.println("I'm not sure what you're asking me to do.");
+            System.out.println("You're gonna want the real Claude for that...");
             break;
         }
     }
@@ -56,6 +60,8 @@ public class Clod {
             return "todo";
         } else if (lowerCaseUserInput.contains("deadline")) {
             return "deadline";
+        } else if (lowerCaseUserInput.contains("event")) {
+            return "event";
         }
         return "add";
     }
@@ -84,6 +90,8 @@ public class Clod {
         System.out.println("Welcome to\n" + logo);
         printUserPrefix(false);
         System.out.println("Hi, I'm Clod. Am I a helper bot? Or a... what was that word... a... thingy? I don't know.");
+        System.out.println("Anyway, I'm supposed to help you with your tasks.");
+        System.out.println("list/todo/deadline/event/mark/unmark/bye are really all that I can handle right now.");
     }
 
     public static void printExitMessage() {

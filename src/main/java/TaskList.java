@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 class TaskList {
     public static final int LISTLOWERBOUND = 1;
+    public static final String LISTSEPARATOR = "==============================================";
     private ArrayList<Task> tasks;
 
     public TaskList() {
@@ -22,6 +23,11 @@ class TaskList {
         Deadline newDeadline = new Deadline(line);
         tasks.add(newDeadline);
         System.out.print("Added to list: " + newDeadline.getDescription() + '\n');
+    }
+    public void addNewEventToList(String line) {
+        Event newEvent = new Event(line);
+        tasks.add(newEvent);
+        System.out.print("Added to list: " + newEvent.getDescription() + '\n');
     }
 
     public void unmarkCompletedTask(Integer taskNumber) {
@@ -66,8 +72,10 @@ class TaskList {
             System.out.println("Hmm... The list seems empty. Did you say anything yet?");
             return;
         }
+        System.out.println(LISTSEPARATOR);
         System.out.println("Here's what you've said so far:");
         printTasksInOrder();
+        System.out.println(LISTSEPARATOR);
     }
 
     private void printTasksInOrder() {
