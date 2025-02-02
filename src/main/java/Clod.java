@@ -26,15 +26,21 @@ public class Clod {
             listOfUserInputs.printList();
             break;
         case "mark":
-            int taskNumber = listOfUserInputs.getTaskNumber(userInput);
+            int taskNumber = listOfUserInputs.getUserTaskNumber(userInput);
             listOfUserInputs.markTaskAsCompleted(taskNumber);
             break;
         case "unmark":
-            int taskNumber2 = listOfUserInputs.getTaskNumber(userInput);
-            listOfUserInputs.removeCompletedTask(taskNumber2);
+            int taskNumber2 = listOfUserInputs.getUserTaskNumber(userInput);
+            listOfUserInputs.unmarkCompletedTask(taskNumber2);
+            break;
+        case "todo":
+            listOfUserInputs.addNewTodoToList(userInput);
+            break;
+        case "deadline":
+            listOfUserInputs.addNewDeadlineToList(userInput);
             break;
         default:
-            listOfUserInputs.addNewTaskToList(userInput);
+            System.out.println("I'm not sure what you're asking me to do.");
             break;
         }
     }
@@ -42,10 +48,14 @@ public class Clod {
     private static String parseCommand(String lowerCaseUserInput) {
         if (lowerCaseUserInput.contains("list")) {
             return "list";
-        } else if (lowerCaseUserInput.contains("mark")) {
-            return "mark";
         } else if (lowerCaseUserInput.contains("unmark")) {
             return "unmark";
+        } else if (lowerCaseUserInput.contains("mark")) {
+            return "mark";
+        } else if (lowerCaseUserInput.contains("todo")) {
+            return "todo";
+        } else if (lowerCaseUserInput.contains("deadline")) {
+            return "deadline";
         }
         return "add";
     }

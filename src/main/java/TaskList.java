@@ -13,8 +13,18 @@ class TaskList {
         tasks.add(newTask);
         System.out.print("Added to list: " + newTask.getDescription() + '\n');
     }
+    public void addNewTodoToList(String line) {
+        Todo newTodo = new Todo(line);
+        tasks.add(newTodo);
+        System.out.print("Added to list: " + newTodo.getDescription() + '\n');
+    }
+    public void addNewDeadlineToList(String line) {
+        Deadline newDeadline = new Deadline(line);
+        tasks.add(newDeadline);
+        System.out.print("Added to list: " + newDeadline.getDescription() + '\n');
+    }
 
-    public void removeCompletedTask(Integer taskNumber) {
+    public void unmarkCompletedTask(Integer taskNumber) {
         if (outOfListBounds(taskNumber)) {
             System.out.println("Come on, even I know that's not a valid task number.");
             return;
@@ -40,7 +50,7 @@ class TaskList {
         return taskNumber < LISTLOWERBOUND || taskNumber > tasks.size();
     }
 
-    public int getTaskNumber(String line) {
+    public int getUserTaskNumber(String line) {
         String[] words = line.split(" ");
         for (String word : words) {
             try {
@@ -57,6 +67,10 @@ class TaskList {
             return;
         }
         System.out.println("Here's what you've said so far:");
+        printTasksInOrder();
+    }
+
+    private void printTasksInOrder() {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + ". " + tasks.get(i).getDescription());
         }

@@ -1,40 +1,45 @@
 public class Task {
-    private boolean isDone = false;
-    private String description;
+    protected boolean isDone;
+    protected String description;
 
     public Task() {
-        setDone(false);
-        setDescription("");
+        this("");
     }
+
     public Task(String description) {
-        setDescription(description);
-        setDone(false);
+        this(false, description);
     }
-    public Task(boolean isDone, String newDescription) {
-        setDone(isDone);
-        setDescription(newDescription);
+
+    public Task(boolean isDone, String description) {
+        this.isDone = isDone;
+        this.description = description;
     }
 
     public boolean isDone() {
         return isDone;
     }
+
     public void setDone(boolean done) {
         isDone = done;
-        setDescription(description);
     }
 
     public String getDescription() {
-        String checkMark;
-        if (isDone) {
-            checkMark = "X";
-        }
-        else{
-            checkMark = " ";
-        }
-        return "[" + checkMark + "] " + description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 
-    public void setDescription(String newDescription) {
-        description = newDescription;
+    public String getBaseDescription() {
+        return description;
+    }
+
+    protected String getStatusIcon() {
+        if (isDone) {
+            return "X";
+        } else {
+            return " ";
+        }
+    }
+
+    protected void setDescription(String description) {
+        this.description = description;
     }
 }
