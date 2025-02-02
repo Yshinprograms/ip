@@ -1,10 +1,6 @@
 import java.util.Scanner;
-import java.util.ArrayList;
 
-// Clod as a play on Claude with a Confused Purpose & Identity
 public class Clod {
-    public static final int LISTLOWERBOUND = 1;
-
     public static void main(String[] args) {
         printStartMessage();
         runClod();
@@ -13,7 +9,7 @@ public class Clod {
 
     public static void runClod() {
         String userInput = takeUserInput();
-        ArrayList<Task> listOfUserInputs = new ArrayList<Task>();
+        TaskList listOfUserInputs = new TaskList();
 
         while (!containsBye(userInput)) {
             processUserCommand(userInput, listOfUserInputs);
@@ -21,24 +17,24 @@ public class Clod {
         }
     }
 
-    private static void processUserCommand(String userInput, ArrayList<Task> listOfUserInputs) {
+    private static void processUserCommand(String userInput, TaskList listOfUserInputs) {
         String lowerCaseUserInput = userInput.toLowerCase();
         String userCommand = parseCommand(lowerCaseUserInput);
 
         switch (userCommand) {
         case "list":
-            printList(listOfUserInputs);
+            listOfUserInputs.printList();
             break;
         case "mark":
-            int taskNumber = getTaskNumber(userInput);
-            printCompletedTask(taskNumber, listOfUserInputs);
+            int taskNumber = listOfUserInputs.getTaskNumber(userInput);
+            listOfUserInputs.markTaskAsCompleted(taskNumber);
             break;
         case "unmark":
-            int taskNumber2 = getTaskNumber(userInput);
-            removeCompletedTask(taskNumber2, listOfUserInputs);
+            int taskNumber2 = listOfUserInputs.getTaskNumber(userInput);
+            listOfUserInputs.removeCompletedTask(taskNumber2);
             break;
         default:
-            addNewTaskToList(userInput, listOfUserInputs);
+            listOfUserInputs.addNewTaskToList(userInput);
             break;
         }
     }
@@ -54,63 +50,11 @@ public class Clod {
         return "add";
     }
 
-    public static void removeCompletedTask(Integer taskNumber, ArrayList<Task> userInputList) {
-        if (outOfListBounds(taskNumber, userInputList)) {
-            System.out.println("Come on, even I know that's not a valid task number.");
-        }
-        Task completedTask = userInputList.get(taskNumber - 1);
-        completedTask.setDone(false);
-        System.out.println("I guess you didn't finish this after all. Well, that's life I guess.");
-        System.out.println(completedTask.getDescription());
-    }
-
-    private static boolean outOfListBounds(Integer taskNumber, ArrayList<Task> userInputList) {
-        // Task numbers are 1 to list size
-        return taskNumber < LISTLOWERBOUND || taskNumber > userInputList.size();
-    }
-
-    public static void printCompletedTask(Integer taskNumber, ArrayList<Task> userInputList) {
-        if (outOfListBounds(taskNumber, userInputList)) {
-            System.out.println("Come on, even I know that's not a valid task number.");
-        } else {
-            Task completedTask = userInputList.get(taskNumber - 1);
-            completedTask.setDone(true);
-            System.out.println("Congrats for finishing this... I think?" + '\n' + completedTask.getDescription());
-        }
-    }
-
-    public static int getTaskNumber(String line) {
-        String[] words = line.split(" ");
-        for (String word : words) {
-            try {
-                return Integer.parseInt(word);
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        return -1;
-    }
-
-    public static void printList(ArrayList<Task> userInputList) {
-        System.out.println("Here's what you've said so far:");
-        int count = 1;
-        for (Task addedTask : userInputList) {
-            System.out.print(count + ". " + addedTask.getDescription() + '\n');
-            count++;
-        }
-    }
-
-    public static void addNewTaskToList(String line, ArrayList<Task> userInputList) {
-        Task newTask = new Task(false, line);
-        userInputList.add(newTask);
-        System.out.print("Added to list: " + newTask.getDescription() + '\n');
-    }
-
     public static boolean containsBye(String line) {
         return line.toLowerCase().contains("bye");
     }
 
     public static String takeUserInput() {
-        // Start new prompt on next line
         System.out.println();
         Scanner in = new Scanner(System.in);
         promptUserInputWith("What's that? Did you say something?");
@@ -145,4 +89,3 @@ public class Clod {
         }
     }
 }
-

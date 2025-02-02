@@ -6,16 +6,18 @@ public class Task {
         setDone(false);
         setDescription("");
     }
-
-    public Task(boolean isDone, String description) {
-        setDone(isDone);
+    public Task(String description) {
         setDescription(description);
+        setDone(false);
+    }
+    public Task(boolean isDone, String newDescription) {
+        setDone(isDone);
+        setDescription(newDescription);
     }
 
     public boolean isDone() {
         return isDone;
     }
-
     public void setDone(boolean done) {
         isDone = done;
         setDescription(description);
