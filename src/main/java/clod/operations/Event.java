@@ -1,7 +1,6 @@
-package operations;
+package clod.operations;
 
-import clod.Clod;
-import exceptions.ClodException;
+import clod.exceptions.ClodException;
 
 class Event extends Task {
     private static final String EVENT_PREFIX = "event";
