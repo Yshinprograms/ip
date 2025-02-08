@@ -1,10 +1,7 @@
-public class Task {
-    protected boolean isDone;
-    protected String description;
-
-    public Task() {
-        this("");
-    }
+class Task {
+    private boolean isDone;
+    private String description;
+    private String typeIcon; // Added typeIcon to Task
 
     public Task(String description) {
         this(false, description);
@@ -13,6 +10,7 @@ public class Task {
     public Task(boolean isDone, String description) {
         this.isDone = isDone;
         this.description = description;
+        this.typeIcon = " "; // Default type icon for base Task
     }
 
     public boolean isDone() {
@@ -24,22 +22,17 @@ public class Task {
     }
 
     public String getDescription() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + getTypeIcon() + "] [" + getStatusIcon() + "] " + description;
     }
 
-    public String getBaseDescription() {
-        return description;
+    public String getTypeIcon() {
+        return typeIcon;
     }
 
     protected String getStatusIcon() {
         if (isDone) {
             return "X";
-        } else {
-            return " ";
         }
-    }
-
-    protected void setDescription(String description) {
-        this.description = description;
+        return " ";
     }
 }
