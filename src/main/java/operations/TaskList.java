@@ -1,4 +1,9 @@
-class TaskList {
+package operations;
+
+import clod.Clod;
+import exceptions.ClodException;
+
+public class TaskList {
     private static final int LIST_LOWER_BOUND = 1;
     private static final String LIST_SEPARATOR = "==============================================";
     private java.util.List<Task> tasks;
@@ -13,15 +18,27 @@ class TaskList {
     }
 
     public void addNewTodoToList(String line) {
-        addTaskToList(new Todo(line));
+        try {
+            addTaskToList(new Todo(line));
+        } catch (ClodException e) {
+            Clod.printMessage(e.getMessage());
+        }
     }
 
     public void addNewDeadlineToList(String line) {
-        addTaskToList(new Deadline(line));
+        try {
+            addTaskToList(new Deadline(line));
+        } catch (Exception e) {
+            Clod.printMessage(e.getMessage());
+        }
     }
 
     public void addNewEventToList(String line) {
-        addTaskToList(new Event(line));
+        try {
+            addTaskToList(new Event(line));
+        } catch (Exception e) {
+            Clod.printMessage(e.getMessage());
+        }
     }
 
     public void markTaskAsCompleted(int taskIndex) {
