@@ -1,6 +1,6 @@
-package operations;
+package clod.operations;
 
-import exceptions.ClodException;
+import clod.exceptions.ClodException;
 
 class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";

@@ -1,7 +1,7 @@
 package clod;
 
-import exceptions.ClodException;
-import operations.*;
+import clod.exceptions.ClodException;
+import clod.operations.TaskList;
 
 
 import java.util.Scanner;

@@ -1,7 +1,7 @@
-package operations;
+package clod.operations;
 
 import clod.Clod;
-import exceptions.ClodException;
+import clod.exceptions.ClodException;
 
 public class TaskList {
     private static final int LIST_LOWER_BOUND = 1;

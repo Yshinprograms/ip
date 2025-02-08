@@ -1,4 +1,4 @@
-package operations;
+package clod.operations;
 
 class Task {
     private boolean isDone;

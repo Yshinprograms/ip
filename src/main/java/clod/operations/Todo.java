@@ -1,6 +1,6 @@
-package operations;
+package clod.operations;
 
-import exceptions.ClodException;
+import clod.exceptions.ClodException;
 
 class Todo extends Task {
     private static final String TODO_PREFIX = "todo";
