@@ -34,7 +34,11 @@ public class TaskList {
     }
 
     public void addNewEventToList(String line) {
-        addTaskToList(new Event(line));
+        try {
+            addTaskToList(new Event(line));
+        } catch (Exception e) {
+            Clod.printMessage(e.getMessage());
+        }
     }
 
     public void markTaskAsCompleted(int taskIndex) {

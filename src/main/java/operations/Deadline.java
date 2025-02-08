@@ -26,7 +26,8 @@ class Deadline extends Task {
     private static String extractDescription(String input) throws ClodException {
         String[] parts = splitInput(input);
         if (parts.length < 1 || parts[0].trim().isEmpty()) {
-            throw new ClodException("Wow. A deadline for nothing? That's beyond even me.");
+            throw new ClodException("Wow. A deadline for nothing? That's beyond even me." +
+                    "\nCome on, if you're gonna try, at least come up with a reasonable description.");
         }
         return parts[0].trim();
     }
@@ -36,7 +37,8 @@ class Deadline extends Task {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new ClodException("A deadline without a DEADLINE huh? " +
                     "You've truly outdone yourself this time." +
-                    "\nMaybe try setting a REAL deadline this time.");
+                    "\nMaybe try setting a REAL deadline this time." +
+                    "\n(Try using /by)");
         }
         return parts[1].trim();
     }
