@@ -1,10 +1,14 @@
+package operations;
+
+import exceptions.ClodException;
+
 class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";
     private static final String TYPE_ICON = "D";
     private static final String BY_DELIMITER = "/by";
     private String by;
 
-    public Deadline(String input) {
+    public Deadline(String input) throws ClodException {
         super(extractDescription(input));
         this.by = extractByTime(input);
     }
@@ -19,16 +23,20 @@ class Deadline extends Task {
         return super.getDescription() + " (by: " + by + ")";
     }
 
-    private static String extractDescription(String input) {
+    private static String extractDescription(String input) throws ClodException {
         String[] parts = splitInput(input);
+        if (parts.length < 1 || parts[0].trim().isEmpty()) {
+            throw new ClodException("Wow. A deadline for nothing? That's beyond even me.");
+        }
         return parts[0].trim();
     }
 
-    private String extractByTime(String input) {
+    private String extractByTime(String input) throws ClodException {
         String[] parts = splitInput(input);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            Clod.printMessage("Error: Missing or empty '/by' delimiter in deadline description.");
-            return "";
+            throw new ClodException("A deadline without a DEADLINE huh? " +
+                    "You've truly outdone yourself this time." +
+                    "\nMaybe try setting a REAL deadline this time.");
         }
         return parts[1].trim();
     }

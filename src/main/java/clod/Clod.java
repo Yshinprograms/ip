@@ -1,3 +1,9 @@
+package clod;
+
+import exceptions.ClodException;
+import operations.*;
+
+
 import java.util.Scanner;
 
 public class Clod {
@@ -22,16 +28,20 @@ public class Clod {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            String userInput = takeUserInput(scanner);
-            if (containsBye(userInput)) {
-                break;
+            try {
+                String userInput = takeUserInput(scanner);
+                if (containsBye(userInput)) {
+                    break;
+                }
+                processUserCommand(userInput, taskList);
+            } catch (ClodException e) {
+                printMessage(e.getMessage());
             }
-            processUserCommand(userInput, taskList);
         }
         scanner.close();
     }
 
-    private static void processUserCommand(String userInput, TaskList taskList) {
+    private static void processUserCommand(String userInput, TaskList taskList) throws ClodException{
         String lowerCaseInput = userInput.toLowerCase();
         String[] words = lowerCaseInput.split("\\s+", 2); // Split input into command and arguments
         String command = words[0];
@@ -62,8 +72,8 @@ public class Clod {
             taskList.addNewEventToList(taskDescription);
             break;
         default:
-            printMessage("You're gonna want the real Claude for that...");
-            break;
+            throw new ClodException("You're gonna want the real Claude for that..." +
+                    "\nDo I look like I've got 175 billion parameters under the hood?");
         }
     }
 
@@ -71,9 +81,12 @@ public class Clod {
         try {
             return Integer.parseInt(taskDescription.trim());
         } catch (NumberFormatException e) {
+            printMessage("I may not be the smartest around, but I can still count you know..." +
+                    "\nMaybe try using task numbers that are actually valid this time.");;
             return -1;
         }
     }
+
 
     public static boolean containsBye(String line) {
         return line.toLowerCase().contains(BYE_COMMAND);
@@ -99,7 +112,10 @@ public class Clod {
         printBotPrefix();
         System.out.println("Anyway, I'm supposed to help you with your tasks.");
         printBotPrefix();
-        System.out.println("list/todo/deadline/event/mark/unmark/bye are really all that I can handle right now.");
+        System.out.println("Let's just say... my vocabulary is a little... focused right now. " +
+                "\nThink list, todo, deadline, event, mark, unmark, and bye. " +
+                "\nThat's about the extent of my genius, I'm not about to debug your code like... " +
+                "\nWell, you know who.");
     }
 
     public static void printExitMessage() {

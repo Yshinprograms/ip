@@ -1,3 +1,7 @@
+package operations;
+
+import clod.Clod;
+
 class Event extends Task {
     private static final String EVENT_PREFIX = "event";
     private static final String TYPE_ICON = "E";

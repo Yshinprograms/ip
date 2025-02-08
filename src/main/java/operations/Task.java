@@ -1,3 +1,5 @@
+package operations;
+
 class Task {
     private boolean isDone;
     private String description;
@@ -10,7 +12,7 @@ class Task {
     public Task(boolean isDone, String description) {
         this.isDone = isDone;
         this.description = description;
-        this.typeIcon = " "; // Default type icon for base Task
+        this.typeIcon = " ";
     }
 
     public boolean isDone() {
