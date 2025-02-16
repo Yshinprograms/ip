@@ -2,7 +2,7 @@ package clod.operations;
 
 import clod.exceptions.ClodException;
 
-class Event extends Task {
+public class Event extends Task {
     private static final String EVENT_PREFIX = "event";
     private static final String TYPE_ICON = "E";
     private static final String FROM_DELIMITER = "/from";

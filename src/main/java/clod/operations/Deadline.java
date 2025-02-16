@@ -2,7 +2,7 @@ package clod.operations;
 
 import clod.exceptions.ClodException;
 
-class Deadline extends Task {
+public class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";
     private static final String TYPE_ICON = "D";
     private static final String BY_DELIMITER = "/by";
