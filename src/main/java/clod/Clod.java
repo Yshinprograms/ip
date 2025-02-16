@@ -1,10 +1,11 @@
 package clod;
 
+import java.io.File;
+import java.util.Scanner;
+
 import clod.exceptions.ClodException;
 import clod.operations.TaskList;
-
-
-import java.util.Scanner;
+import clod.storage.Storage;
 
 public class Clod {
     private static final String BOT_PREFIX = "Clod: ";
@@ -18,14 +19,25 @@ public class Clod {
     private static final String DELETE_COMMAND = "delete";
     private static final String BYE_COMMAND = "bye";
 
+    private static final String DATA_DIR = "data";
+    private static final String DATA_FILE = "clod.txt";
+
     public static void main(String[] args) {
-        printStartMessage();
-        runClod();
-        printExitMessage();
+        try {
+            // Look for any prev saved data in data/clod.txt
+            String filePath = DATA_DIR + File.separator + DATA_FILE;
+            Storage saveData = new Storage(filePath);
+            TaskList taskList = new TaskList(saveData);
+
+            printStartMessage();
+            runClod(taskList);
+            printExitMessage();
+        } catch (ClodException e) {
+            printMessage("Error starting Clod: " + e.getMessage());
+        }
     }
 
-    public static void runClod() {
-        TaskList taskList = new TaskList();
+    public static void runClod(TaskList taskList) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -77,14 +89,12 @@ public class Clod {
         }
     }
 
-    private static int parseTaskIndex(String taskDescription) {
+    private static int parseTaskIndex(String taskDescription) throws ClodException {
         try {
             return Integer.parseInt(taskDescription.trim());
         } catch (NumberFormatException e) {
-            printMessage("I may not be the smartest around, but I can still count you know..." +
+            throw new ClodException("I may not be the smartest around, but I can still count you know..." +
                     "\nMaybe try using task numbers that are actually valid this time.");
-            ;
-            return -1;
         }
     }
 

@@ -1,6 +1,7 @@
 package clod.operations;
 
-abstract class Task {
+
+abstract public class Task {
     private boolean isDone;
     private String description;
     private String typeIcon; // Added typeIcon to Task

@@ -2,19 +2,44 @@ package clod.operations;
 
 import clod.Clod;
 import clod.exceptions.ClodException;
+import clod.storage.Storage;
+
+import java.io.IOException;
+import java.util.List;
 
 public class TaskList {
     private static final int LIST_LOWER_BOUND = 1;
     private static final String LIST_SEPARATOR = "==============================================";
-    private java.util.List<Task> tasks;
+    private final java.util.List<Task> tasks;
+    private final Storage storage;
 
-    public TaskList() {
-        tasks = new java.util.ArrayList<>();
+    public TaskList(Storage previouslySavedStorage) {
+        this.tasks = new java.util.ArrayList<>();
+        this.storage = previouslySavedStorage;
+        try {
+            storage.loadTasks(this);
+        } catch (IOException e) {
+            Clod.printMessage("Error loading previous task list. " +
+                    "This may be empty if its your first time seeing me...");
+        }
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     public void addTaskToList(Task task) {
         tasks.add(task);
         Clod.printMessage("Added to list: " + task.getDescription());
+        saveTaskToStorage();
+    }
+
+    private void saveTaskToStorage() {
+        try {
+            storage.saveTasks(this);
+        } catch (IOException e) {
+            Clod.printMessage("Error saving task list");
+        }
     }
 
     public void addNewTaskToListByType(String command, String line) {

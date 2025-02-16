@@ -2,7 +2,7 @@ package clod.operations;
 
 import clod.exceptions.ClodException;
 
-class Todo extends Task {
+public class Todo extends Task {
     private static final String TODO_PREFIX = "todo";
     private static final String TYPE_ICON = "T";
 
