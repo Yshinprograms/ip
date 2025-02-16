@@ -63,13 +63,9 @@ public class Clod {
             taskList.unmarkCompletedTask(parseTaskIndex(taskDescription));
             break;
         case TODO_COMMAND:
-            taskList.addNewTodoToList(taskDescription);
-            break;
         case DEADLINE_COMMAND:
-            taskList.addNewDeadlineToList(taskDescription);
-            break;
         case EVENT_COMMAND:
-            taskList.addNewEventToList(taskDescription);
+            taskList.addNewTaskToListByType(command, taskDescription);
             break;
         default:
             throw new ClodException("You're gonna want the real Claude for that..." +
