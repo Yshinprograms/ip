@@ -26,6 +26,11 @@ public class TaskList {
         }
     }
 
+    public void deleteTaskFromList(int taskIndex) {
+        Clod.printMessage("Deleted task: " + tasks.get(taskIndex - 1).getDescription());
+        tasks.remove(taskIndex - 1);
+    }
+
     private Task createTaskByType(String command, String line) throws ClodException {
         switch (command) {
         case "todo":

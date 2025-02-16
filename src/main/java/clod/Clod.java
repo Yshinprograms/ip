@@ -15,6 +15,7 @@ public class Clod {
     private static final String TODO_COMMAND = "todo";
     private static final String DEADLINE_COMMAND = "deadline";
     private static final String EVENT_COMMAND = "event";
+    private static final String DELETE_COMMAND = "delete";
     private static final String BYE_COMMAND = "bye";
 
     public static void main(String[] args) {
@@ -41,7 +42,7 @@ public class Clod {
         scanner.close();
     }
 
-    private static void processUserCommand(String userInput, TaskList taskList) throws ClodException{
+    private static void processUserCommand(String userInput, TaskList taskList) throws ClodException {
         String lowerCaseInput = userInput.toLowerCase();
         String[] words = lowerCaseInput.split("\\s+", 2); // Split input into command and arguments
         String command = words[0];
@@ -67,6 +68,9 @@ public class Clod {
         case EVENT_COMMAND:
             taskList.addNewTaskToListByType(command, taskDescription);
             break;
+        case DELETE_COMMAND:
+            taskList.deleteTaskFromList(parseTaskIndex(taskDescription));
+            break;
         default:
             throw new ClodException("You're gonna want the real Claude for that..." +
                     "\nDo I look like I've got 175 billion parameters under the hood?");
@@ -78,7 +82,8 @@ public class Clod {
             return Integer.parseInt(taskDescription.trim());
         } catch (NumberFormatException e) {
             printMessage("I may not be the smartest around, but I can still count you know..." +
-                    "\nMaybe try using task numbers that are actually valid this time.");;
+                    "\nMaybe try using task numbers that are actually valid this time.");
+            ;
             return -1;
         }
     }
