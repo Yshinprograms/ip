@@ -17,27 +17,30 @@ public class TaskList {
         Clod.printMessage("Added to list: " + task.getDescription());
     }
 
-    public void addNewTodoToList(String line) {
+    public void addNewTaskToListByType(String command, String line) {
         try {
-            addTaskToList(new Todo(line));
+            Task newTask = createTaskByType(command, line);
+            addTaskToList(newTask);
         } catch (ClodException e) {
             Clod.printMessage(e.getMessage());
         }
     }
 
-    public void addNewDeadlineToList(String line) {
-        try {
-            addTaskToList(new Deadline(line));
-        } catch (Exception e) {
-            Clod.printMessage(e.getMessage());
-        }
+    public void deleteTaskFromList(int taskIndex) {
+        Clod.printMessage("Deleted task: " + tasks.get(taskIndex - 1).getDescription());
+        tasks.remove(taskIndex - 1);
     }
 
-    public void addNewEventToList(String line) {
-        try {
-            addTaskToList(new Event(line));
-        } catch (Exception e) {
-            Clod.printMessage(e.getMessage());
+    private Task createTaskByType(String command, String line) throws ClodException {
+        switch (command) {
+        case "todo":
+            return new Todo(line);
+        case "deadline":
+            return new Deadline(line);
+        case "event":
+            return new Event(line);
+        default:
+            throw new ClodException("Unknown task type: " + command);
         }
     }
 
