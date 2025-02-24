@@ -1,12 +1,11 @@
 package clod.storage;
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.io.FileWriter;
 import java.io.FileReader;
-
+import java.io.FileWriter;
+import java.io.IOException;
 import clod.operations.Task;
 import clod.operations.TaskList;
 import clod.operations.Todo;
@@ -14,20 +13,21 @@ import clod.operations.Event;
 import clod.operations.Deadline;
 import clod.exceptions.ClodException;
 import clod.ui.Interactions;
+import clod.operations.TimeManager;
+import java.time.LocalDateTime;
 
 public class Storage {
     private String filePath;
     private static final String DATA_DIR = "data";
     private static final String DATA_FILE = "clod.txt";
 
-    public static TaskList initialiseStorage () throws ClodException {
+    public static TaskList initialiseStorage() throws ClodException {
         String filePath = DATA_DIR + File.separator + DATA_FILE;
         Storage saveData = new Storage(filePath);
         return new TaskList(saveData);
     }
 
     public Storage(String path) throws ClodException {
-        // Saves data/clod.txt for later use
         this.filePath = path;
         File dataFile = new File(path);
         File dataDirectory = dataFile.getParentFile();
@@ -54,7 +54,7 @@ public class Storage {
     public void saveTasks(TaskList taskList) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : taskList.getTasks()) {
-                writer.write(convertTaskToString(task));
+                writer.write(task.toFileFormat());
                 writer.newLine();
             }
         }
@@ -63,66 +63,25 @@ public class Storage {
     public void loadTasks(TaskList taskList) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            int lineNumber = 0;
             while ((line = reader.readLine()) != null) {
+                lineNumber++;
                 try {
                     Task task = convertStringToTask(line);
                     if (task != null) {
                         taskList.addTaskToList(task);
                     }
                 } catch (ClodException e) {
-                    Interactions.printMessage("Error reading task: " + e.getMessage());
+                    Interactions.printMessage("Error reading task at line " + lineNumber + ": " + e.getMessage());
                 }
             }
         }
-    }
-
-    private String convertTaskToString(Task task) {
-        StringBuilder sb = new StringBuilder();
-        String typeIcon = task.getTypeIcon();
-        String isDone;
-        if (task.isDone()) isDone = "1";
-        else isDone = "0";
-
-        // Split the description to handle the different parts
-        String description = task.getDescription();
-
-        // Basic task info
-        sb.append(typeIcon).append(" | ").append(isDone).append(" | ");
-
-        // Extract the main description (remove type and status icons)
-        String mainDesc = description.substring(description.indexOf("]") + 1); // Skip first ]
-        mainDesc = mainDesc.substring(mainDesc.indexOf("]") + 1).trim(); // Skip second ]
-
-        // Handle different task types
-        if (typeIcon.equals("D")) {
-            // For Deadline, split at (by:
-            String[] parts = mainDesc.split("\\(by:");
-            sb.append(parts[0].trim());
-            if (parts.length > 1) {
-                sb.append(" | ").append(parts[1].replace(")", "").trim());
-            }
-        } else if (typeIcon.equals("E")) {
-            // For Event, split at (from:
-            String[] parts = mainDesc.split("\\(from:");
-            sb.append(parts[0].trim());
-            if (parts.length > 1) {
-                String[] timeParts = parts[1].split("to:");
-                sb.append(" | ").append(timeParts[0].trim());
-                if (timeParts.length > 1) {
-                    sb.append(" | ").append(timeParts[1].replace(")", "").trim());
-                }
-            }
-        } else {
-            sb.append(mainDesc);
-        }
-
-        return sb.toString();
     }
 
     private Task convertStringToTask(String line) throws ClodException {
-        String[] parts = line.split("\\|");
+        String[] parts = line.split("\\|"); 
         if (parts.length < 3) {
-            throw new ClodException("Invalid task format: " + line);
+            throw new ClodException("Invalid task format (needs at least type, status, and description): " + line);
         }
 
         // Trim all parts
@@ -138,19 +97,16 @@ public class Storage {
         Task task;
         switch (type) {
         case "T":
-            task = new Todo("todo " + description);
+            task = new Todo(description);
             break;
         case "D":
-            if (parts.length < 4) {
-                throw new ClodException("Invalid deadline format: " + line);
-            }
-            task = new Deadline("deadline " + description + " /by " + parts[3]);
+            task = createDeadline(parts, description);
             break;
         case "E":
             if (parts.length < 5) {
-                throw new ClodException("Invalid event format: " + line);
+                throw new ClodException("Invalid event format (missing from/to times): " + line);
             }
-            task = new Event("event " + description + " /from " + parts[3] + " /to " + parts[4]);
+            task = new Event(description + " /from " + parts[3] + " /to " + parts[4]);
             break;
         default:
             throw new ClodException("Unknown task type: " + type);
@@ -158,5 +114,18 @@ public class Storage {
 
         task.setDone(isDone);
         return task;
+    }
+
+    private Task createDeadline(String[] parts, String description) throws ClodException {
+        if (parts.length < 4) {
+            throw new ClodException("Invalid deadline format (missing date): " + String.join(" | ", parts));
+        }
+        try {
+            LocalDateTime by = TimeManager.parseDate(parts[3]);
+            return new Deadline(description, by);
+        } catch (ClodException e) {
+            throw new ClodException("Invalid date format in storage: " + parts[3] + 
+                "\nExpected format: yyyy-MM-dd HHmm (e.g., 2024-02-25 1430)");
+        }
     }
 }

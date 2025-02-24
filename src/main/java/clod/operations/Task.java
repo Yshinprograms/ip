@@ -37,4 +37,6 @@ abstract public class Task {
         }
         return " ";
     }
+
+    public abstract String toFileFormat();
 }

@@ -34,8 +34,11 @@ public class Parser {
             taskList.unmarkCompletedTask(parseTaskIndex(taskDescription));
             break;
         case TODO_COMMAND:
-        case DEADLINE_COMMAND:
         case EVENT_COMMAND:
+            taskList.addNewTaskToListByType(command, taskDescription);
+            break;
+        case DEADLINE_COMMAND:
+            validateDeadlineFormat(taskDescription);
             taskList.addNewTaskToListByType(command, taskDescription);
             break;
         case DELETE_COMMAND:
@@ -53,6 +56,13 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new ClodException("I may not be the smartest around, but I can still count you know..." +
                     "\nMaybe try using task numbers that are actually valid this time.");
+        }
+    }
+
+    private static void validateDeadlineFormat(String input) throws ClodException {
+        if (!input.contains("/by")) {
+            throw new ClodException("Oops! The format for a deadline should be: deadline <description> /by <yyyy-MM-dd HHmm>\n" +
+                    "For example: deadline return book /by 2024-02-25 1430");
         }
     }
 }
