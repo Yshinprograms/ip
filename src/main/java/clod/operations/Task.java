@@ -1,6 +1,5 @@
 package clod.operations;
 
-
 abstract public class Task {
     private boolean isDone;
     private String description;

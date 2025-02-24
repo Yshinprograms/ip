@@ -7,16 +7,24 @@ import java.io.IOException;
 import java.io.FileWriter;
 import java.io.FileReader;
 
-import clod.Clod;
 import clod.operations.Task;
 import clod.operations.TaskList;
 import clod.operations.Todo;
 import clod.operations.Event;
 import clod.operations.Deadline;
 import clod.exceptions.ClodException;
+import clod.ui.Interactions;
 
 public class Storage {
     private String filePath;
+    private static final String DATA_DIR = "data";
+    private static final String DATA_FILE = "clod.txt";
+
+    public static TaskList initialiseStorage () throws ClodException {
+        String filePath = DATA_DIR + File.separator + DATA_FILE;
+        Storage saveData = new Storage(filePath);
+        return new TaskList(saveData);
+    }
 
     public Storage(String path) throws ClodException {
         // Saves data/clod.txt for later use
@@ -27,7 +35,7 @@ public class Storage {
         if (!dataDirectory.exists()) {
             try {
                 dataDirectory.mkdirs();
-                Clod.printMessage("Directory created: " + dataDirectory.getAbsolutePath());
+                Interactions.printMessage("Directory created: " + dataDirectory.getAbsolutePath());
             } catch (SecurityException e) {
                 throw new ClodException("Error creating data directory: " + e.getMessage());
             }
@@ -36,7 +44,7 @@ public class Storage {
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();
-                Clod.printMessage("Created data file: " + dataFile.getAbsolutePath());
+                Interactions.printMessage("Created data file: " + dataFile.getAbsolutePath());
             } catch (IOException e) {
                 throw new ClodException("Error creating data file: " + e.getMessage());
             }
@@ -62,7 +70,7 @@ public class Storage {
                         taskList.addTaskToList(task);
                     }
                 } catch (ClodException e) {
-                    Clod.printMessage("Error reading task: " + e.getMessage());
+                    Interactions.printMessage("Error reading task: " + e.getMessage());
                 }
             }
         }
@@ -105,7 +113,6 @@ public class Storage {
                 }
             }
         } else {
-            // For Todo, just use the description
             sb.append(mainDesc);
         }
 

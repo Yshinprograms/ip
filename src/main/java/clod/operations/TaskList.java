@@ -1,6 +1,6 @@
 package clod.operations;
 
-import clod.Clod;
+import clod.ui.Interactions;
 import clod.exceptions.ClodException;
 import clod.storage.Storage;
 
@@ -19,7 +19,7 @@ public class TaskList {
         try {
             storage.loadTasks(this);
         } catch (IOException e) {
-            Clod.printMessage("Error loading previous task list. " +
+            Interactions.printMessage("Error loading previous task list. " +
                     "This may be empty if its your first time seeing me...");
         }
     }
@@ -30,7 +30,7 @@ public class TaskList {
 
     public void addTaskToList(Task task) {
         tasks.add(task);
-        Clod.printMessage("Added to list: " + task.getDescription());
+        Interactions.printMessage("Added to list: " + task.getDescription());
         saveTaskToStorage();
     }
 
@@ -38,7 +38,7 @@ public class TaskList {
         try {
             storage.saveTasks(this);
         } catch (IOException e) {
-            Clod.printMessage("Error saving task list");
+            Interactions.printMessage("Error saving task list");
         }
     }
 
@@ -47,13 +47,14 @@ public class TaskList {
             Task newTask = createTaskByType(command, line);
             addTaskToList(newTask);
         } catch (ClodException e) {
-            Clod.printMessage(e.getMessage());
+            Interactions.printMessage(e.getMessage());
         }
     }
 
     public void deleteTaskFromList(int taskIndex) {
-        Clod.printMessage("Deleted task: " + tasks.get(taskIndex - 1).getDescription());
+        Interactions.printMessage("Deleted task: " + tasks.get(taskIndex - 1).getDescription());
         tasks.remove(taskIndex - 1);
+        saveTaskToStorage();
     }
 
     private Task createTaskByType(String command, String line) throws ClodException {
@@ -79,16 +80,16 @@ public class TaskList {
 
     private void updateTaskStatus(int taskIndex, boolean isDone) {
         if (!isValidTaskIndex(taskIndex)) {
-            Clod.printMessage("Come on, even I know that's not a valid task number.");
+            Interactions.printMessage("Come on, even I know that's not a valid task number.");
             return;
         }
         Task task = tasks.get(taskIndex - 1);
         task.setDone(isDone);
 
         if (isDone) {
-            Clod.printMessage("Congrats for finishing this... I think?" + "\n" + task.getDescription());
+            Interactions.printMessage("Congrats for finishing this... I think?" + "\n" + task.getDescription());
         } else
-            Clod.printMessage("I guess you didn't finish this after all. Well, that's life I guess." + "\n" + task.getDescription());
+            Interactions.printMessage("I guess you didn't finish this after all. Well, that's life I guess." + "\n" + task.getDescription());
     }
 
 
@@ -99,11 +100,11 @@ public class TaskList {
 
     public void printList() {
         if (tasks.isEmpty()) {
-            Clod.printMessage("Hmm... The list seems empty. Did you say anything yet?");
+            Interactions.printMessage("Hmm... The list seems empty. Did you say anything yet?");
             return;
         }
         System.out.println(LIST_SEPARATOR);
-        Clod.printMessage("Here's what you've said so far:");
+        Interactions.printMessage("Here's what you've said so far:");
         printTasksInOrder();
         System.out.println(LIST_SEPARATOR);
     }
