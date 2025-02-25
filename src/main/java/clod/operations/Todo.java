@@ -5,6 +5,7 @@ import clod.exceptions.ClodException;
 public class Todo extends Task {
     private static final String TODO_PREFIX = "todo";
     private static final String TYPE_ICON = "T";
+    private static final String USAGE_INSTRUCTIONS = "Usage: {description}";
 
     public Todo(String input) throws ClodException {
         super(processInput(input));
@@ -18,7 +19,7 @@ public class Todo extends Task {
     private static String processInput(String input) throws ClodException {
         String processed = input.replaceFirst("(?i)^" + TODO_PREFIX + "\\s*", "").trim();
         if (processed.isEmpty()) {
-            throw new ClodException("Bruh, you want me to create a ToDo without anything in it?");
+            throw new ClodException("Todo description cannot be empty!\n" + USAGE_INSTRUCTIONS);
         }
         return processed;
     }
