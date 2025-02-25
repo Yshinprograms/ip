@@ -3,6 +3,10 @@ package clod.ui;
 import clod.exceptions.ClodException;
 import clod.operations.TaskList;
 
+/**
+ * The Parser class handles the processing of user input commands.
+ * It interprets commands and delegates the actions to the appropriate methods in TaskList.
+ */
 public class Parser {
     private static final String LIST_COMMAND = "list";
     private static final String MARK_COMMAND = "mark";
@@ -13,6 +17,15 @@ public class Parser {
     private static final String DELETE_COMMAND = "delete";
     private static final String FIND_COMMAND = "find";
 
+    /**
+     * Processes the user input command and performs the associated action.
+     * Splits the input into a command and its arguments, then routes to the
+     * appropriate method in TaskList.
+     *
+     * @param userInput The raw input string from the user
+     * @param taskList The TaskList to perform operations on
+     * @throws ClodException If the command is invalid or if there are issues with the operation
+     */
     public static void processUserCommand(String userInput, TaskList taskList) throws ClodException {
         String lowerCaseInput = userInput.toLowerCase();
         String[] words = lowerCaseInput.split("\\s+", 2); // Split input into command and arguments
@@ -55,6 +68,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a string into a valid task index.
+     *
+     * @param taskDescription String containing the task index
+     * @return The parsed integer index
+     * @throws ClodException If the string cannot be parsed as a valid integer
+     */
     private static int parseTaskIndex(String taskDescription) throws ClodException {
         try {
             return Integer.parseInt(taskDescription.trim());

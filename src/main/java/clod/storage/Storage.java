@@ -16,17 +16,35 @@ import clod.exceptions.ClodException;
 import clod.ui.Interactions;
 import clod.operations.TimeManager; // Import TimeManager
 
+/**
+ * The Storage class handles the persistence of tasks to disk and loading of tasks from disk.
+ * It manages the file operations for saving and retrieving tasks from a text file.
+ */
 public class Storage {
     private String filePath;
     private static final String DATA_DIR = "data";
     private static final String DATA_FILE = "clod.txt";
 
-    public static TaskList initialiseStorage () throws ClodException {
+    /**
+     * Initializes the storage system by creating necessary directories and files,
+     * then loads any existing tasks from the file.
+     *
+     * @return A new TaskList containing previously saved tasks (if any)
+     * @throws ClodException If there are issues with file or directory creation
+     */
+    public static TaskList initialiseStorage() throws ClodException {
         String filePath = DATA_DIR + File.separator + DATA_FILE;
         Storage saveData = new Storage(filePath);
         return new TaskList(saveData);
     }
 
+    /**
+     * Creates a Storage object for a specific file path.
+     * Ensures that the necessary directories and files exist.
+     *
+     * @param path The file path where tasks will be stored
+     * @throws ClodException If there are issues with file or directory creation
+     */
     public Storage(String path) throws ClodException {
         // Saves data/clod.txt for later use
         this.filePath = path;
@@ -52,6 +70,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves all tasks in the given TaskList to the storage file.
+     * Each task is converted to a string representation before saving.
+     *
+     * @param taskList The TaskList containing tasks to be saved
+     * @throws IOException If there are issues writing to the file
+     */
     public void saveTasks(TaskList taskList) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Task task : taskList.getTasks()) {
@@ -61,6 +86,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from the storage file and adds them to the given TaskList.
+     * Each line in the file is converted back to a Task object.
+     *
+     * @param taskList The TaskList to which tasks will be added
+     * @throws IOException If there are issues reading from the file
+     */
     public void loadTasks(TaskList taskList) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;

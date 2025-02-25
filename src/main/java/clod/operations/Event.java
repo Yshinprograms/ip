@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 import clod.exceptions.ClodException;
 
+/**
+ * Represents an Event task.
+ */
 public class Event extends Task {
     private static final String EVENT_PREFIX = "event";
     private static final String TYPE_ICON = "E";
@@ -13,6 +16,11 @@ public class Event extends Task {
     private LocalDateTime from; // Changed to LocalDateTime
     private LocalDateTime to;   // Changed to LocalDateTime
 
+    /**
+     * Constructs an Event object with the given input.
+     * @param input The input string containing the event description, start time, and end time.
+     * @throws ClodException If the input is invalid.
+     */
     public Event(String input) throws ClodException {
         super(extractEventDescription(input));
         LocalDateTime[] startAndEndTime = extractStartAndEndTimes(input);

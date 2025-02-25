@@ -7,13 +7,25 @@ import clod.storage.Storage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
+/**
+ * The TaskList class manages the collection of tasks and operations on them.
+ * It handles adding, removing, finding, and updating tasks, as well as
+ * persisting changes to the storage system.
+ */
 public class TaskList {
     private static final int LIST_LOWER_BOUND = 1;
     private static final String LIST_SEPARATOR = "==============================================";
     private final java.util.List<Task> tasks;
     private final Storage storage;
 
+    /**
+     * Creates a new TaskList with the specified storage system.
+     * Attempts to load any previously saved tasks during initialization.
+     *
+     * @param previouslySavedStorage The storage system to use for persistence
+     */
     public TaskList(Storage previouslySavedStorage) {
         this.tasks = new java.util.ArrayList<>();
         this.storage = previouslySavedStorage;
@@ -25,10 +37,21 @@ public class TaskList {
         }
     }
 
+    /**
+     * Returns the list of all tasks currently managed by this TaskList.
+     *
+     * @return An unmodifiable List of Task objects
+     */
     public List<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Adds a task to the list and persists it to storage.
+     * Displays a confirmation message to the user.
+     *
+     * @param task The Task to add to the list
+     */
     public void addTaskToList(Task task) {
         tasks.add(task);
         Interactions.printMessage("Added to list: " + task.getDescription());
@@ -43,6 +66,13 @@ public class TaskList {
         }
     }
 
+    /**
+     * Creates a new task of the specified type and adds it to the list.
+     * Handles exceptions and provides feedback to the user.
+     *
+     * @param command The type of task to create (todo, deadline, event)
+     * @param line    The description and other details for the task
+     */
     public void addNewTaskToListByType(String command, String line) {
         try {
             Task newTask = createTaskByType(command, line);
@@ -52,6 +82,12 @@ public class TaskList {
         }
     }
 
+    /**
+     * Deletes a task at the specified index from the list.
+     * Updates the storage after deletion.
+     *
+     * @param taskIndex The 1-based index of the task to delete
+     */
     public void deleteTaskFromList(int taskIndex) {
         Interactions.printMessage("Deleted task: " + tasks.get(taskIndex - 1).getDescription());
         tasks.remove(taskIndex - 1);
@@ -71,10 +107,20 @@ public class TaskList {
         }
     }
 
+    /**
+     * Marks a task as completed at the specified index.
+     *
+     * @param taskIndex The 1-based index of the task to mark as completed
+     */
     public void markTaskAsCompleted(int taskIndex) {
         updateTaskStatus(taskIndex, true);
     }
 
+    /**
+     * Removes the completed status from a task at the specified index.
+     *
+     * @param taskIndex The 1-based index of the task to unmark
+     */
     public void unmarkCompletedTask(int taskIndex) {
         updateTaskStatus(taskIndex, false);
     }
@@ -93,12 +139,14 @@ public class TaskList {
             Interactions.printMessage("I guess you didn't finish this after all. Well, that's life I guess." + "\n" + task.getDescription());
     }
 
-
     private boolean isValidTaskIndex(int taskIndex) {
         return taskIndex >= LIST_LOWER_BOUND && taskIndex <= tasks.size();
     }
 
-
+    /**
+     * Displays all tasks in the list to the user.
+     * If the list is empty, provides appropriate feedback.
+     */
     public void printList() {
         if (tasks.isEmpty()) {
             Interactions.printMessage("Hmm... The list seems empty. Did you say anything yet?");
@@ -118,8 +166,7 @@ public class TaskList {
 
     public void findTasksByKeyword(String keyword) {
         if (tasks.isEmpty()) {
-            Interactions.printMessage("There's nothing to search through." +
-                    "The list is emptier than my... well, everything.");
+            Interactions.printMessage("There's nothing to search through. The list is emptier than my... well, everything.");
             return;
         }
 
@@ -127,22 +174,25 @@ public class TaskList {
         for (Task task : tasks) {
             String taskDescription = task.getDescription().toLowerCase();
             if (taskDescription.contains(keyword)) {
-                matchingTasks.add(task);
+                String description = task.getDescription().toLowerCase();
+                if (description.contains(keyword.toLowerCase())) {
+                    matchingTasks.add(task);
+                }
             }
-        }
 
-        if (matchingTasks.isEmpty()) {
-            Interactions.printMessage("Searched high and low but couldn't find '" + keyword + "'. " +
-                    "Are you sure it exists? I'm not exactly known for my memory, you know.");
-            return;
-        }
+            if (matchingTasks.isEmpty()) {
+                Interactions.printMessage("Searched high and low but couldn't find '" + keyword + "'. " +
+                        "Are you sure it exists? I'm not exactly known for my memory, you know.");
+                return;
+            }
 
-        // Print the matching tasks
-        System.out.println(LIST_SEPARATOR);
-        Interactions.printMessage("Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println((i + 1) + ". " + matchingTasks.get(i).getDescription());
+            // Print the matching tasks
+            System.out.println(LIST_SEPARATOR);
+            Interactions.printMessage("Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println((i + 1) + ". " + matchingTasks.get(i).getDescription());
+            }
+            System.out.println(LIST_SEPARATOR);
         }
-        System.out.println(LIST_SEPARATOR);
     }
 }
