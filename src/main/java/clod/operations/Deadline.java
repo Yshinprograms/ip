@@ -2,12 +2,20 @@ package clod.operations;
 
 import clod.exceptions.ClodException;
 
+/**
+ * Represents a Deadline task.
+ */
 public class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";
     private static final String TYPE_ICON = "D";
     private static final String BY_DELIMITER = "/by";
     private String by;
 
+    /**
+     * Constructs a Deadline object with the given input.
+     * @param input The input string containing the deadline description and time.
+     * @throws ClodException If the input is invalid.
+     */
     public Deadline(String input) throws ClodException {
         super(extractDescription(input));
         this.by = extractByTime(input);
