@@ -1,5 +1,7 @@
 package clod.operations;
 
+import java.time.LocalDateTime;
+
 import clod.exceptions.ClodException;
 
 public class Event extends Task {
@@ -7,14 +9,14 @@ public class Event extends Task {
     private static final String TYPE_ICON = "E";
     private static final String FROM_DELIMITER = "/from";
     private static final String TO_DELIMITER = "/to";
-    private String startTime;
-    private String endTime;
+    private LocalDateTime from; // Changed to LocalDateTime
+    private LocalDateTime to;   // Changed to LocalDateTime
 
     public Event(String input) throws ClodException {
         super(extractEventDescription(input));
-        String[] startAndEndTime = extractStartAndEndTimes(input);
-        this.startTime = startAndEndTime[0];
-        this.endTime = startAndEndTime[1];
+        LocalDateTime[] startAndEndTime = extractStartAndEndTimes(input);
+        this.from = startAndEndTime[0];
+        this.to = startAndEndTime[1];
     }
 
     @Override
@@ -24,8 +26,30 @@ public class Event extends Task {
 
     @Override
     public String getDescription() {
-        return super.getDescription() + " (from: " + startTime + " to: " + endTime + ")";
+        return super.getDescription() + " (from: " + TimeManager.formatForDisplay(from) + " to: " + TimeManager.formatForDisplay(to) + ")";
     }
+
+    // Added for Storage to get description without time
+    public String getDescriptionWithoutTime() {
+        return super.getDescription();
+    }
+
+    public LocalDateTime getFrom() {
+        return from;
+    }
+
+    public LocalDateTime getTo() {
+        return to;
+    }
+
+    public void setFrom(LocalDateTime from) {
+        this.from = from;
+    }
+
+    public void setTo(LocalDateTime to) {
+        this.to = to;
+    }
+
 
     private static String extractEventDescription(String input) throws ClodException {
         String[] descriptionParts = splitEventInput(input, FROM_DELIMITER);
@@ -37,7 +61,7 @@ public class Event extends Task {
         return descriptionParts[0].trim();
     }
 
-    private String[] extractStartAndEndTimes(String input) throws ClodException {
+    private LocalDateTime[] extractStartAndEndTimes(String input) throws ClodException {
         String[] fromParts = splitEventInput(input, FROM_DELIMITER);
         if (isDelimiterMissingOrEmpty(fromParts)) {
             throw new ClodException("I may not be the best bot to host events, " +
@@ -47,17 +71,32 @@ public class Event extends Task {
 
         String fromToSection = fromParts[1];
         String[] toParts = splitEventInputSection(fromToSection, TO_DELIMITER);
-        String start = toParts[0].trim();
-        String end;
+        String startString = toParts[0].trim();
+        String endString;
+        LocalDateTime start;
+        LocalDateTime end;
+
+
+        try {
+            start = TimeManager.parseDate(startString);
+        } catch (ClodException e) {
+            throw new ClodException("Whats the time for the event to start? \n" + e.getMessage());
+        }
+
 
         if (toParts.length < 2 || toParts[1].trim().isEmpty()) {
             throw new ClodException("And when is this thing ever gonna end? " +
                     "\n(Missing '/to' time)");
         } else {
-            end = toParts[1].trim();
+            endString = toParts[1].trim();
+            try {
+                end = TimeManager.parseDate(endString);
+            } catch (ClodException e) {
+                throw new ClodException("Whats the time for the event to end? \n" + e.getMessage());
+            }
         }
 
-        return new String[]{start, end};
+        return new LocalDateTime[]{start, end};
     }
 
     private static boolean isDelimiterMissingOrEmpty(String[] parts) {

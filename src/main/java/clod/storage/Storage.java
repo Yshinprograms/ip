@@ -14,6 +14,7 @@ import clod.operations.Event;
 import clod.operations.Deadline;
 import clod.exceptions.ClodException;
 import clod.ui.Interactions;
+import clod.operations.TimeManager; // Import TimeManager
 
 public class Storage {
     private String filePath;
@@ -66,9 +67,7 @@ public class Storage {
             while ((line = reader.readLine()) != null) {
                 try {
                     Task task = convertStringToTask(line);
-                    if (task != null) {
-                        taskList.addTaskToList(task);
-                    }
+                    taskList.addTaskToList(task);
                 } catch (ClodException e) {
                     Interactions.printMessage("Error reading task: " + e.getMessage());
                 }
@@ -76,6 +75,7 @@ public class Storage {
         }
     }
 
+    // Every time we save Task to storage, we call this function
     private String convertTaskToString(Task task) {
         StringBuilder sb = new StringBuilder();
         String typeIcon = task.getTypeIcon();
@@ -83,37 +83,18 @@ public class Storage {
         if (task.isDone()) isDone = "1";
         else isDone = "0";
 
-        // Split the description to handle the different parts
-        String description = task.getDescription();
-
         // Basic task info
         sb.append(typeIcon).append(" | ").append(isDone).append(" | ");
 
-        // Extract the main description (remove type and status icons)
-        String mainDesc = description.substring(description.indexOf("]") + 1); // Skip first ]
-        mainDesc = mainDesc.substring(mainDesc.indexOf("]") + 1).trim(); // Skip second ]
-
-        // Handle different task types
-        if (typeIcon.equals("D")) {
-            // For Deadline, split at (by:
-            String[] parts = mainDesc.split("\\(by:");
-            sb.append(parts[0].trim());
-            if (parts.length > 1) {
-                sb.append(" | ").append(parts[1].replace(")", "").trim());
-            }
-        } else if (typeIcon.equals("E")) {
-            // For Event, split at (from:
-            String[] parts = mainDesc.split("\\(from:");
-            sb.append(parts[0].trim());
-            if (parts.length > 1) {
-                String[] timeParts = parts[1].split("to:");
-                sb.append(" | ").append(timeParts[0].trim());
-                if (timeParts.length > 1) {
-                    sb.append(" | ").append(timeParts[1].replace(")", "").trim());
-                }
-            }
-        } else {
-            sb.append(mainDesc);
+        // We need to initialise the various subclasses again here because we cannot access their methods through the Task class
+        if (task instanceof Deadline) {
+            Deadline deadline = (Deadline) task;
+            sb.append(deadline.getDescriptionWithoutIcons()).append(" | ").append(TimeManager.formatForStorage(deadline.getBy()));
+        } else if (task instanceof Event) {
+            Event event = (Event) task;
+            sb.append(event.getDescriptionWithoutIcons()).append(" | ").append(TimeManager.formatForStorage(event.getFrom())).append(" | ").append(TimeManager.formatForStorage(event.getTo())); // Use getDescriptionWithoutTime()
+        } else { // Todo
+            sb.append(task.getDescription()); // For Todo, getDescription() is fine
         }
 
         return sb.toString();
@@ -125,7 +106,7 @@ public class Storage {
             throw new ClodException("Invalid task format: " + line);
         }
 
-        // Trim all parts
+        // Trim all parts so that there are no whitespaces during processing
         for (int i = 0; i < parts.length; i++) {
             parts[i] = parts[i].trim();
         }
@@ -144,13 +125,19 @@ public class Storage {
             if (parts.length < 4) {
                 throw new ClodException("Invalid deadline format: " + line);
             }
-            task = new Deadline("deadline " + description + " /by " + parts[3]);
+            String byTimeString = parts[3];
+            task = new Deadline("deadline " + description + " /by " + byTimeString);
+            ((Deadline) task).setBy(TimeManager.parseDate(byTimeString)); // Parse and set LocalDateTime
             break;
         case "E":
             if (parts.length < 5) {
                 throw new ClodException("Invalid event format: " + line);
             }
-            task = new Event("event " + description + " /from " + parts[3] + " /to " + parts[4]);
+            String fromTimeString = parts[3];
+            String toTimeString = parts[4];
+            task = new Event("event " + description + " /from " + fromTimeString + " /to " + toTimeString);
+            ((Event) task).setFrom(TimeManager.parseDate(fromTimeString)); // Parse and set LocalDateTime
+            ((Event) task).setTo(TimeManager.parseDate(toTimeString));     // Parse and set LocalDateTime
             break;
         default:
             throw new ClodException("Unknown task type: " + type);

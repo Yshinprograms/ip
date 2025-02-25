@@ -1,16 +1,30 @@
 package clod.operations;
 
+import java.time.LocalDateTime;
+
 import clod.exceptions.ClodException;
 
 public class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";
     private static final String TYPE_ICON = "D";
     private static final String BY_DELIMITER = "/by";
-    private String by;
+    private LocalDateTime by;
 
     public Deadline(String input) throws ClodException {
         super(extractDescription(input));
         this.by = extractByTime(input);
+    }
+
+    public void setBy(LocalDateTime by) {
+        this.by = by;
+    }
+
+    public LocalDateTime getBy() {
+        return by;
+    }
+
+    public String getDescriptionWithoutTime(){
+        return super.getDescription();
     }
 
     @Override
@@ -20,7 +34,7 @@ public class Deadline extends Task {
 
     @Override
     public String getDescription() {
-        return super.getDescription() + " (by: " + by + ")";
+        return super.getDescription() + " (by: " + TimeManager.formatForDisplay(by) + ")";
     }
 
     private static String extractDescription(String input) throws ClodException {
@@ -32,7 +46,7 @@ public class Deadline extends Task {
         return parts[0].trim();
     }
 
-    private String extractByTime(String input) throws ClodException {
+    private LocalDateTime extractByTime(String input) throws ClodException {
         String[] parts = splitInput(input);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new ClodException("A deadline without a DEADLINE huh? " +
@@ -40,7 +54,8 @@ public class Deadline extends Task {
                     "\nMaybe try setting a REAL deadline this time." +
                     "\n(Try using /by)");
         }
-        return parts[1].trim();
+
+        return TimeManager.parseDate(parts[1].trim());
     }
 
 
