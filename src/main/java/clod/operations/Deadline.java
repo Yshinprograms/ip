@@ -32,15 +32,30 @@ public class Deadline extends Task {
         return by;
     }
 
+    /**
+     * Returns a description of the saved deadline task only, without time included
+     *
+     * @return A formatted deadline description without time
+     */
     public String getDescriptionWithoutTime(){
         return super.getDescription();
     }
 
+    /**
+     * Returns type icon for deadline
+     *
+     * @return 'D' for the deadline icon
+     */
     @Override
     public String getTypeIcon() {
         return TYPE_ICON;
     }
 
+    /**
+     * Returns a description of the saved deadline task
+     *
+     * @return A formatted deadline description with time
+     */
     @Override
     public String getDescription() {
         return super.getDescription() + " (by: " + TimeManager.formatForDisplay(by) + ")";
