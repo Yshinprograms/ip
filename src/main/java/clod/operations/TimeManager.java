@@ -24,8 +24,7 @@ public class TimeManager {
         try {
             return LocalDateTime.parse(dateString.trim(), INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new ClodException("Invalid date format! Please use 'yyyy-mm-dd hhmm'\n" +
-                    "For example: 2024-02-25 1430 for Feb 25, 2024, 2:30 PM");
+            return null;
         }
     }
 

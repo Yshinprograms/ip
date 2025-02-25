@@ -8,6 +8,7 @@ public class Deadline extends Task {
     private static final String DEADLINE_PREFIX = "deadline";
     private static final String TYPE_ICON = "D";
     private static final String BY_DELIMITER = "/by";
+    private static final String USAGE_INSTRUCTIONS = "Usage: {description} /by {yyyy/MM/dd hh:mm}";
     private LocalDateTime by;
 
     public Deadline(String input) throws ClodException {
@@ -41,7 +42,8 @@ public class Deadline extends Task {
         String[] parts = splitInput(input);
         if (parts.length < 1 || parts[0].trim().isEmpty()) {
             throw new ClodException("Wow. A deadline for nothing? That's beyond even me." +
-                    "\nCome on, if you're gonna try, at least come up with a reasonable description.");
+                    "\nCome on, if you're gonna try, at least come up with a reasonable description.\n" +
+                    USAGE_INSTRUCTIONS);
         }
         return parts[0].trim();
     }
@@ -51,8 +53,8 @@ public class Deadline extends Task {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new ClodException("A deadline without a DEADLINE huh? " +
                     "You've truly outdone yourself this time." +
-                    "\nMaybe try setting a REAL deadline this time." +
-                    "\n(Try using /by)");
+                    "\nMaybe try setting a REAL deadline this time.\n" +
+                    USAGE_INSTRUCTIONS);
         }
 
         return TimeManager.parseDate(parts[1].trim());
