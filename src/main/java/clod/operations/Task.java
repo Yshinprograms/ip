@@ -27,6 +27,10 @@ abstract public class Task {
         return "[" + getTypeIcon() + "] [" + getStatusIcon() + "] " + description;
     }
 
+    public String getDescriptionWithoutIcons(){
+        return description;
+    }
+
     public String getTypeIcon() {
         return typeIcon;
     }
