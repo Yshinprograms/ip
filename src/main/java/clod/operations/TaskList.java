@@ -5,6 +5,7 @@ import clod.exceptions.ClodException;
 import clod.storage.Storage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskList {
@@ -113,5 +114,35 @@ public class TaskList {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + ". " + tasks.get(i).getDescription());
         }
+    }
+
+    public void findTasksByKeyword(String keyword) {
+        if (tasks.isEmpty()) {
+            Interactions.printMessage("There's nothing to search through." +
+                    "The list is emptier than my... well, everything.");
+            return;
+        }
+
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            String taskDescription = task.getDescription().toLowerCase();
+            if (taskDescription.contains(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            Interactions.printMessage("Searched high and low but couldn't find '" + keyword + "'. " +
+                    "Are you sure it exists? I'm not exactly known for my memory, you know.");
+            return;
+        }
+
+        // Print the matching tasks
+        System.out.println(LIST_SEPARATOR);
+        Interactions.printMessage("Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println((i + 1) + ". " + matchingTasks.get(i).getDescription());
+        }
+        System.out.println(LIST_SEPARATOR);
     }
 }
