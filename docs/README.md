@@ -12,6 +12,17 @@ Clod is a command-line task management chatbot.  While Clod might not be the *br
     * Clod will automatically create a `data` directory (if it doesn't exist) in the same location you run the command, and in that the file `clod.txt` is created.
     * Clod automatically saves and loads your tasks from `data/clod.txt`.
 
+## Command Format
+
+Words in `UPPER_CASE` are the parameters to be supplied by the user.
+e.g. in `todo DESCRIPTION`, `DESCRIPTION` is a parameter which can be used as `todo Eat Lunch`.
+
+Time inputs must be indicated using a '/' to mark the start of the time input.
+e.g. `deadline DESCRIPTION /by DATE_TIME` can be used as `deadline Eat Lunch /by 2025-11-11 1400`.
+
+Time inputs must be provided in yyyy-MM-dd HHmm format.
+e.g. `yyyy-MM-dd HHmm` can be used as `2025-11-11 1400`.
+
 ## Features
 *   **Task Management:**
     *   **Add a to-do task:**
@@ -21,11 +32,13 @@ Clod is a command-line task management chatbot.  While Clod might not be the *br
     *   **Add a deadline task:**
         *   Command: `deadline DESCRIPTION /by DATE_TIME`
         *   Explanation: Adds a new deadline task with the given description and deadline.
-        *   Example: `deadline submit report /by tomorrow`
+        *   Example: `deadline submit report /by 2023-12-31 1800`
+        *   Date Format: Use `yyyy-MM-dd HHmm` format for deadlines (e.g., `2023-12-31 1800` for Dec 31, 2023, 6:00 PM)
     *   **Add an event task:**
         *   Command: `event DESCRIPTION /from START_TIME /to END_TIME`
         *   Explanation: Adds a new event task with the given description, start time, and end time.
-        *   Example: `event attend meeting /from 2pm /to 4pm`
+        *   Example: `event team meeting /from 2023-10-15 1400 /to 2023-10-15 1600`
+        *   Date Format: Use `yyyy-MM-dd HHmm` format for event times
     *   **Delete a task:**
         *   Command: `delete TASK_NUMBER`
         *   Explanation: Deletes the task with the given task number from the list.
@@ -38,36 +51,30 @@ Clod is a command-line task management chatbot.  While Clod might not be the *br
         *   Command: `mark TASK_NUMBER`
         *   Explanation: Marks the task with the given task number as completed. The task number corresponds to the number shown when you use the `list` command.
         *   Example: `mark 1`
-    *   **Mark a task as undone:**
+    *   **Unmark a completed task:**
         *   Command: `unmark TASK_NUMBER`
-        *   Explanation: Marks a completed task as *not* completed.
-        *   Example: `unmark 1`
+        *   Explanation: Removes the completed status from a task that was previously marked as done.
+        *   Example: `unmark 2`
     *   **Find tasks by keyword:**
         *   Command: `find KEYWORD`
-        *   Explanation: Finds tasks that contain the given keyword in their description.
-        *   Example: `find book`
-*   **Storage:**
-    *   Load tasks: Loads previously saved tasks from the `data/clod.txt` file.
-    *   Save tasks: Saves the current list of tasks to the `data/clod.txt` file.
-*   **User Interface:**
-    *   Text-based interface: Interact with the chatbot through text commands.
+        *   Explanation: Searches through all tasks for the specified keyword and displays matching tasks.
+        *   Example: `find meeting`
 
-## Command Format
+*   **Persistent Storage:**
+    *   Tasks are automatically saved to `data/clod.txt` when added, deleted, or their status is changed.
+    *   Tasks are automatically loaded from storage when Clod starts.
+    *   Storage format preserves all task details including completion status, descriptions, and time information.
 
-Words in `UPPER_CASE` are the parameters to be supplied by the user.
-e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+*   **Time Management:**
+    *   Supports date and time input in `yyyy-MM-dd HHmm` format (e.g., `2023-12-31 1800`)
+    *   Displays dates in a user-friendly format (e.g., `Dec 31 2023, 6:00 PM`)
+    *   Handles both event time ranges (start and end times) and deadlines
 
-Items in square brackets are optional.
-e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
-
-Items with `…` after them can be used multiple times including zero times.
-e.g. `[t/TAG]…` can be used as (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
-
-Parameters can be in any order.
-e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
-
-Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
-e.g. if the command specifies `help 123`, it will be interpreted as `help`.
+*   **User Experience:**
+    *   **Personality:** Clod has a mix of forgetfulness, sarcasm and nonchalance that adds character to interactions.
+    *   **Error Handling:** Provides clear, conversational error messages when commands are improperly formatted.
+    *   **Input Validation:** Validates user input and provides guidance when inputs are malformed.
+    *   **Exit Command:** Use `bye` to exit the application.
 
 ## Error Handling
 
@@ -75,25 +82,71 @@ Clod provides informative error messages for invalid commands and incorrect inpu
 
 *   **Invalid command:**
     *   Explanation: If you enter an invalid command, Clod will display a message indicating that it does not understand the command.
-    *   Example: `blah` -> `Clod: I'm sorry, but I don't know what that means :-(`
+    *   Example:  `help`  →  `Clod: You're gonna want the real Claude for that... Do I look like I've got 175 billion parameters under the hood?`
+
 *   **Missing description for todo:**
     *   Explanation: If you enter the `todo` command without a description, Clod will display an error message.
-    *   Example: `todo` -> `Clod: Todo description cannot be empty!`
-*   **Missing description/time for deadline:**
-    *   Explanation: If you enter the `deadline` command without a description or deadline, Clod will display an error message.
-    *   Example: `deadline` -> If the description is missing: `Clod: Wow. A deadline for nothing? That's beyond even me.\nCome on, if you're gonna try, at least come up with a reasonable description.` If the time is missing: `Clod: A deadline without a DEADLINE huh? You've truly outdone yourself this time.\nMaybe try setting a REAL deadline this time.`
-*   **Missing description/time for event:**
-    *   Explanation: If you enter the `event` command without a description, start time, or end time, Clod will display an error message.
-    *   Example: `event` -> Clod will prompt for the missing information, e.g., `Clod: Whats the time for the event to start?`
-*   **Invalid task number:**
-    *   Explanation: If you try to mark, unmark, or delete a task with an invalid task number, Clod will display an error message.
-    *   Example: `mark 0` -> `Clod: I may not be the smartest around, but I can still count you know...`
-*   **Task not found:**
+    *   Example:  `todo`  →  `Clod: Todo description cannot be empty! Usage: {description}`
+
+*   **Missing description for deadline:**
+    *   Explanation: If you enter the `deadline` command without a description, Clod will display an error message.
+    *   Example:  `deadline`  →  `Clod: Wow. A deadline for nothing? That's beyond even me. Come on, if you're gonna try, at least come up with a reasonable description. Usage: {description} /by {yyyy/MM/dd hh:mm}`
+
+*   **Missing time for deadline:**
+    *   Explanation: If you enter the `deadline` command with a description but without a deadline, Clod will display an error message.
+    *   Example:  `deadline submit report`  →  `Clod: A deadline without a DEADLINE huh? You've truly outdone yourself this time. Maybe try setting a REAL deadline this time. Usage: {description} /by {yyyy/MM/dd hh:mm}`
+
+*   **Missing description for event:**
+    *   Explanation: If you enter the `event` command without any description, Clod will display an error message.
+    *   Example:  `event`  →  `Clod: Lazing around all day with no specific event descriptions sounds like my kinda thing... Usage: {description} /from {yyyy/MM/dd hh:mm} /to {yyyy/MM/dd hh:mm}`
+
+*   **Missing start time for event:**
+    *   Explanation: If you enter the `event` command with a description but without a start time, Clod will display an error message.
+    *   Example:  `event team meeting`  → `Clod: I may not be the best bot to host events, but we're still gonna need to get it started. Usage: {description} /from {yyyy/MM/dd hh:mm} /to {yyyy/MM/dd hh:mm}`
+
+*   **Missing end time for event:**
+    *   Explanation: If you enter the `event` command with a description and start time but without an end time, Clod will display an error message.
+    *   Example:  `event team meeting /from 2023-10-15 1400`  →  `Clod: And when is this thing ever gonna end? Usage: {description} /from {yyyy/MM/dd hh:mm} /to {yyyy/MM/dd hh:mm}`
+
+*   **Invalid task number format:**
+    *   Explanation: If you try to `mark`, `unmark`, or `delete` a task with a non-numeric task number, Clod will display an error message.
+    *   Example:  `mark abc`  →  `Clod: I may not be the smartest around, but I can still count you know... Maybe try using task numbers that are actually valid this time.`
+
+*   **Invalid task index:**
+    *   Explanation: If you try to `mark`, `unmark`, or `delete` a task with a task number that doesn't exist in the list, Clod will display an error message.
+    *   Example:  `mark 999` (when there are fewer tasks)  →  `Clod: Come on, even I know that's not a valid task number.`
+
+*   **Empty search keyword:**
     *   Explanation: If you enter the `find` command without a keyword, Clod will display an error message.
-    *   Example: `find` -> `Clod: What am I supposed to find? Your hopes and dreams?`
-*   **Invalid task format:**
-    *   Explanation: If the save file (`data/clod.txt`) is corrupted, Clod will display an error message.
-    *   Example: Corrupted `data/clod.txt` -> `Clod: Invalid task format: ...`
+    *   Example: `find` → `Clod: What am I supposed to find? Your hopes and dreams? Try giving me a keyword to search for instead.`
+
+*   **Empty task list when searching:**
+    *   Explanation: If you try to search when the task list is empty, Clod will let you know.
+    *   Example: `find meeting` (when list is empty) → `Clod: There's nothing to search through. The list is emptier than my... well, everything.`
+
+* **No matching tasks found:**
+    * Explanation: If no tasks match your search keyword, Clod will display a message.
+    * Example: `find xyz` (when no tasks match) → `Clod: Searched high and low but couldn't find 'xyz'. Are you sure it exists? I'm not exactly known for my memory, you know.`
+
+*   **Empty task list when listing:**
+    *   Explanation: If you try to list tasks when the list is empty, Clod will display a message.
+    *   Example:  `list` (when no tasks have been added)  →  `Clod: Hmm... The list seems empty. Did you say anything yet?`
+
+
+
+
+*   **Command Summary:**
+    | Command | Format | Description |
+    | ------- | ------ | ----------- |
+    | `todo` | `todo DESCRIPTION` | Adds a todo task |
+    | `deadline` | `deadline DESCRIPTION /by DATE_TIME` | Adds a deadline task with specified deadline |
+    | `event` | `event DESCRIPTION /from START_TIME /to END_TIME` | Adds an event with start and end times |
+    | `list` | `list` | Shows all tasks |
+    | `mark` | `mark TASK_NUMBER` | Marks a task as completed |
+    | `unmark` | `unmark TASK_NUMBER` | Unmarks a completed task |
+    | `delete` | `delete TASK_NUMBER` | Removes a task from the list |
+    | `find` | `find KEYWORD` | Finds tasks containing the keyword |
+    | `bye` | `bye` | Exits the program |
 
 ## Usage Examples
 

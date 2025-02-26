@@ -126,7 +126,7 @@ public class Storage {
             Event event = (Event) task;
             sb.append(event.getDescriptionWithoutIcons()).append(" | ").append(TimeManager.formatForStorage(event.getFrom())).append(" | ").append(TimeManager.formatForStorage(event.getTo())); // Use getDescriptionWithoutTime()
         } else { // Todo
-            sb.append(task.getDescription()); // For Todo, getDescription() is fine
+            sb.append(task.getDescriptionWithoutIcons());
         }
 
         return sb.toString();

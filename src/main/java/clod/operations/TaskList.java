@@ -132,6 +132,7 @@ public class TaskList {
         }
         Task task = tasks.get(taskIndex - 1);
         task.setDone(isDone);
+        saveTaskToStorage();
 
         if (isDone) {
             Interactions.printMessage("Congrats for finishing this... I think?" + "\n" + task.getDescription());
