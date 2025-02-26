@@ -132,22 +132,6 @@ Clod provides informative error messages for invalid commands and incorrect inpu
     *   Explanation: If you try to list tasks when the list is empty, Clod will display a message.
     *   Example:  `list` (when no tasks have been added)  →  `Clod: Hmm... The list seems empty. Did you say anything yet?`
 
-
-
-
-*   **Command Summary:**
-    | Command | Format | Description |
-    | ------- | ------ | ----------- |
-    | `todo` | `todo DESCRIPTION` | Adds a todo task |
-    | `deadline` | `deadline DESCRIPTION /by DATE_TIME` | Adds a deadline task with specified deadline |
-    | `event` | `event DESCRIPTION /from START_TIME /to END_TIME` | Adds an event with start and end times |
-    | `list` | `list` | Shows all tasks |
-    | `mark` | `mark TASK_NUMBER` | Marks a task as completed |
-    | `unmark` | `unmark TASK_NUMBER` | Unmarks a completed task |
-    | `delete` | `delete TASK_NUMBER` | Removes a task from the list |
-    | `find` | `find KEYWORD` | Finds tasks containing the keyword |
-    | `bye` | `bye` | Exits the program |
-
 ## Usage Examples
 
 Here's how you might interact with Clod:
