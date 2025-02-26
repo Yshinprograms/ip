@@ -35,7 +35,8 @@ public class TimeManager {
         try {
             return LocalDateTime.parse(dateString.trim(), INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            return null;
+            throw new ClodException("Invalid date format: " + dateString
+                    + "\nValid format is yyyy-MM-dd HHmm\nExample: " + INPUT_FORMAT.format(LocalDateTime.now()));
         }
     }
 
