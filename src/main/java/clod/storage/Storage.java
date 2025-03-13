@@ -14,7 +14,7 @@ import clod.operations.Event;
 import clod.operations.Deadline;
 import clod.exceptions.ClodException;
 import clod.ui.Interactions;
-import clod.operations.TimeManager; // Import TimeManager
+import clod.operations.TimeManager;
 
 /**
  * The Storage class handles the persistence of tasks to disk and loading of tasks from disk.
@@ -118,14 +118,16 @@ public class Storage {
         // Basic task info
         sb.append(typeIcon).append(" | ").append(isDone).append(" | ");
 
-        // We need to initialise the various subclasses again here because we cannot access their methods through the Task class
         if (task instanceof Deadline) {
             Deadline deadline = (Deadline) task;
-            sb.append(deadline.getDescriptionWithoutIcons()).append(" | ").append(TimeManager.formatForStorage(deadline.getBy()));
+            sb.append(deadline.getDescriptionWithoutIcons()).append(" | ")
+                    .append(TimeManager.formatForStorage(deadline.getBy()));
         } else if (task instanceof Event) {
             Event event = (Event) task;
-            sb.append(event.getDescriptionWithoutIcons()).append(" | ").append(TimeManager.formatForStorage(event.getFrom())).append(" | ").append(TimeManager.formatForStorage(event.getTo())); // Use getDescriptionWithoutTime()
-        } else { // Todo
+            sb.append(event.getDescriptionWithoutIcons()).append(" | ")
+                    .append(TimeManager.formatForStorage(event.getFrom()))
+                    .append(" | ").append(TimeManager.formatForStorage(event.getTo()));
+        } else {
             sb.append(task.getDescriptionWithoutIcons());
         }
 

@@ -6,13 +6,6 @@ import java.time.format.DateTimeParseException;
 
 import clod.exceptions.ClodException;
 
-// LocalDateTime represents yyyy-mm-dd HH:mm
-// LocalDate represents yyyy-mm-dd
-// LocalTime represents HH:mm
-// DateTimeFormatter allows us to define how we want to interpret date/time strings
-// parse() converts a string into date/time
-// format converts date/time back into a string for display
-
 /**
  * The TimeManager class handles formatting of Strings into LocalDateTime format
  * It provides methods for formatting LocalDateTime for display and storage.

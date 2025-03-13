@@ -31,7 +31,7 @@ public class Clod {
     }
 
     /**
-     * The main execution loop for the application.
+     * Runs the Clod application.
      * Continuously accepts user commands until the user exits.
      *
      * @param taskList The TaskList to perform operations on
